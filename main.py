@@ -1,66 +1,22 @@
-import smtplib
-import ssl
+import datetime
+import os
 import time
 
-import requests
-from bs4 import BeautifulSoup
-
-ultimos_liks = []
+from src.notificacao_boletando_service import NotificationBoletandoService
 
 
-def start():
-    while True:
-        html = requests.get("https://boletando.com/").content
-        soup = BeautifulSoup(html, 'html.parser')
-        artigos = soup.find_all("h3", class_="flowhidden mb10 fontnormal position-relative")
-        for artigo in artigos:
-            textoDoArtigo = artigo.next.text
-            linkDoArtigo = artigo.next['href']
+def main():
+    notificationService = NotificationBoletandoService()
+    should_check_new_promotions = bool(os.getenv("SHOULD_CHECK_NEW_PROMOTIONS"))
 
-            if ehDoMeuInteresse(textoDoArtigo) and linkDoArtigo not in ultimos_liks:
-                print(textoDoArtigo)
-                print(linkDoArtigo)
-                ultimos_liks.append(linkDoArtigo)
-                email(linkDoArtigo)
+    while should_check_new_promotions:
+        print(f"Iniciando busca as: {datetime.datetime.now()}")
+        notificationService.check_new_promotions()
+        print(f"Finalizando busca as: {datetime.datetime.now()}")
 
-        time.sleep(60)
-
-
-def ehDoMeuInteresse(textoDoArtigo: str) -> bool:
-    if (
-            textoDoArtigo.__contains__("3060") or
-            textoDoArtigo.__contains__("2060") or
-            textoDoArtigo.__contains__("3050") or
-            textoDoArtigo.__contains__("3070")
-    ):
-        return True
-
-    return False
-
-
-def email(text: str):
-    port = 587  # For starttls
-    smtp_server = "smtp.gmail.com"
-    sender_email = "youremail@gmail.com"
-    receiver_email = "youremail@gmail.com"
-    password = "yourpassword"
-    subject = "Promocao Boletando"
-
-    message = f"""\
-    Subject: {subject}
-    From: {sender_email}
-
-    {text}."""
-    try:
-        context = ssl.create_default_context()
-        with smtplib.SMTP(smtp_server, port) as server:
-            server.starttls(context=context)
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message)
-            print("email enviado com sucesso")
-    except Exception as e:
-        print(f"Erro: {e}")
+        time.sleep(10)
+        should_check_new_promotions = bool(os.getenv("SHOULD_CHECK_NEW_PROMOTIONS"))
 
 
 if __name__ == '__main__':
-    start()
+    main()
