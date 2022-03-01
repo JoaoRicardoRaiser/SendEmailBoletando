@@ -36,8 +36,11 @@ class NotificationBoletandoService:
         message = self.__create_message(my_interest_publication_links, my_interest_publications)
 
         if len(my_interest_publication_links) > 0:
-            self.__email_sending_service.send_boletando_promotion(message)
-            for publication in my_interest_publication_links: self.__last_links.append(publication)
+            try:
+                self.__email_sending_service.send_boletando_promotion(message)
+                for publication in my_interest_publication_links: self.__last_links.append(publication)
+            except Exception as e:
+                print(f"Ocorreu um erro ao enviar email: {e}")
 
         self.__check_update_controller_informations()
 

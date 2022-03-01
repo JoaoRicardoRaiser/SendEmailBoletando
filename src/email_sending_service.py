@@ -20,7 +20,6 @@ class EmailSendingService:
     def send_boletando_promotion(self, message: MIMEMultipart) -> None:
         EmailSendingService.__add_reference_data(message)
         try:
-            self.server.ehlo()
             self.server.sendmail(message['From'], message['To'], message.as_string())
             print('successfully sent the mail')
         except Exception as e:
