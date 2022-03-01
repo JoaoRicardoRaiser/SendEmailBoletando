@@ -70,7 +70,8 @@ class NotificationBoletandoService:
                 publication_text.__contains__("2060") or
                 publication_text.__contains__("3050") or
                 publication_text.__contains__("3070") or
-                publication_text.__contains__("1650")
+                publication_text.__contains__("1650") or
+                publication_text.__contains__("Monitor")
         ):
             return True
         return False
