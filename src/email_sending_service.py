@@ -22,7 +22,7 @@ class EmailSendingService:
             server.login(self.__sender_email, self.__password)
             server.sendmail(message['From'], message['To'], message.as_string())
             server.close()
-            
+
             print('successfully sent the mail')
         except Exception as e:
             print(f"Error: {e}")
