@@ -13,8 +13,7 @@ def run():
         print(f"Iniciando busca as: {datetime.datetime.now()}")
         notificationService.check_new_promotions()
         print(f"Finalizando busca as: {datetime.datetime.now()}")
-
-        time.sleep(5)
+        time.sleep(60)
 
 
 if __name__ == '__main__':
