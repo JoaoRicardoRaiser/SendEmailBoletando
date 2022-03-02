@@ -11,4 +11,4 @@ class HtmlParserService:
         link_boletando = os.getenv("LINK_BOLETANDO")
         html = requests.get(link_boletando).content
         soup = BeautifulSoup(html, 'html.parser')
-        return soup.find_all("div", class_="grid_desc_and_btn")
+        return soup.find_all("div", class_="info_in_dealgrid")

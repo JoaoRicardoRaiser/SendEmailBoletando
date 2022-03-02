@@ -27,7 +27,10 @@ class NotificationBoletandoService:
             publication_text = publication_relevant_info.text
             publication_link = publication_relevant_info.next['href']
 
-            if self.__is_my_interest(publication_text) and publication_link not in self.__last_links:
+            has_corram_tag = self.__check_if_has_corram_tag(publication)
+
+            if self.__is_my_interest(publication_relevant_info,
+                                     has_corram_tag) and publication_link not in self.__last_links:
                 print(publication_text)
                 print(publication_link)
                 my_interest_publication_links.append(publication_link)
@@ -67,23 +70,33 @@ class NotificationBoletandoService:
         return message
 
     @staticmethod
-    def __is_my_interest(publication_text: str) -> bool:
+    def __is_my_interest(publication_relevant_info: Tag, has_corram_tag: bool) -> bool:
+        publication_text = publication_relevant_info.text
         if (
                 publication_text.__contains__("3060") or
                 publication_text.__contains__("2060") or
                 publication_text.__contains__("3050") or
                 publication_text.__contains__("3070") or
                 publication_text.__contains__("1650") or
-                publication_text.__contains__("Monitor")
+                publication_text.__contains__("Monitor") or
+                has_corram_tag
         ):
             return True
         return False
 
     @staticmethod
     def __get_relevant_informations(publication: Tag):
-        rel_info = publication.find_next(class_="flowhidden mb10 fontnormal position-relative")
-        rel_info_on_fire = publication.find_next(class_="flowhidden mb10 fontnormal position-relative hoticonfireclass")
-        return rel_info if rel_info is not None else rel_info_on_fire
+        info_publ = publication.find_next(class_="grid_desc_and_btn")
+        rel_info = info_publ.find_next(class_="flowhidden mb10 fontnormal position-relative")
+        rel_info_fire = info_publ.find_next(class_="flowhidden mb10 fontnormal position-relative hoticonfireclass")
+        return rel_info if rel_info is not None else rel_info_fire
+
+    @staticmethod
+    def __check_if_has_corram_tag(publication: Tag):
+        tag_corram = publication.find_next(class_="re-ribbon-badge left-badge badge_3")
+
+        if not tag_corram.__eq__(None):
+            return tag_corram.text.upper() == "CORRAM"
 
     def __check_update_controller_informations(self) -> None:
         day_of_intance = self.__instance_time.day
