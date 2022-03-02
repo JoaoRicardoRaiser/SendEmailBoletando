@@ -11,8 +11,6 @@ class EmailSendingService:
         self.__port = int(os.getenv("GMAIL_SMPT_PORT"))
         self.__smtp_server = os.getenv("GMAIL_SMTP_HOST")
 
-
-
     def send_boletando_promotion(self, message: MIMEMultipart) -> None:
         EmailSendingService.__add_reference_data(message)
         try:

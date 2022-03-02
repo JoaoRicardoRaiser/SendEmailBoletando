@@ -54,7 +54,7 @@ class NotificationBoletandoService:
             price = publications[i].find_next(class_="rh_regular_price").text
 
             name_and_link_div_info = publications[i].find_next(class_="flowhidden mb10 fontnormal position-relative")
-            publication_link = name_and_link_div_info.a["href"]
+            publication_link = name_and_link_div_info.next["href"]
             publication_name = name_and_link_div_info.text
 
             text += f"""
