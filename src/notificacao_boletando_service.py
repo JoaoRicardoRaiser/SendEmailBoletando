@@ -73,12 +73,12 @@ class NotificationBoletandoService:
     def __is_my_interest(publication_relevant_info: Tag, has_corram_tag: bool) -> bool:
         publication_text = publication_relevant_info.text
         if (
-                publication_text.__contains__("3060") or
-                publication_text.__contains__("2060") or
-                publication_text.__contains__("3050") or
-                publication_text.__contains__("3070") or
-                publication_text.__contains__("1650") or
-                publication_text.__contains__("Monitor") or
+                publication_text.upper().__contains__("3060") or
+                publication_text.upper().__contains__("2060") or
+                publication_text.upper().__contains__("3050") or
+                publication_text.upper().__contains__("3070") or
+                publication_text.upper().__contains__("1650") or
+                publication_text.upper().__contains__("Monitor") or
                 has_corram_tag
         ):
             return True
