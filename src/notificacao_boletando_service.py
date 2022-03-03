@@ -25,7 +25,8 @@ class NotificationBoletandoService:
             publication_relevant_info = self.__get_relevant_informations(publication)
 
             publication_text = publication_relevant_info.text
-            publication_link = publication_relevant_info.next['href']
+            publication_link = publication_relevant_info.a['href']
+            a = 1
 
             has_corram_tag = self.__check_if_has_corram_tag(publication)
 
@@ -33,6 +34,8 @@ class NotificationBoletandoService:
                                      has_corram_tag) and publication_link not in self.__last_links:
                 print(publication_text)
                 print(publication_link)
+                print("=" * 60)
+
                 my_interest_publication_links.append(publication_link)
                 my_interest_publications.append(publication)
 
@@ -47,15 +50,14 @@ class NotificationBoletandoService:
 
         self.__check_update_controller_informations()
 
-    @staticmethod
-    def __create_message(publication_links: List[str], publications: List[Tag]) -> MIMEMultipart:
+    def __create_message(self, publication_links: List[str], publications: List[Tag]) -> MIMEMultipart:
         text = ""
         for i in range(len(publication_links)):
-            price = publications[i].find_next(class_="rh_regular_price").text
+            relevant_info = self.__get_relevant_informations(publications[i])
+            price = publications[i].findChild(class_="rh_regular_price").text
 
-            name_and_link_div_info = publications[i].find_next(class_="flowhidden mb10 fontnormal position-relative")
-            publication_link = name_and_link_div_info.next["href"]
-            publication_name = name_and_link_div_info.text
+            publication_link = relevant_info.a["href"]
+            publication_name = relevant_info.text
 
             text += f"""
                     Modelo: {publication_name}
@@ -79,24 +81,25 @@ class NotificationBoletandoService:
                 publication_text.upper().__contains__("3070") or
                 publication_text.upper().__contains__("1650") or
                 publication_text.upper().__contains__("MONITOR") or
+                publication_text.upper().__contains__("HEADSET") or
                 has_corram_tag
         ):
             return True
         return False
 
     @staticmethod
-    def __get_relevant_informations(publication: Tag):
-        info_publ = publication.find_next(class_="grid_desc_and_btn")
-        rel_info = info_publ.find_next(class_="flowhidden mb10 fontnormal position-relative")
-        rel_info_fire = info_publ.find_next(class_="flowhidden mb10 fontnormal position-relative hoticonfireclass")
-        return rel_info if rel_info is not None else rel_info_fire
-
-    @staticmethod
-    def __check_if_has_corram_tag(publication: Tag):
-        tag_corram = publication.find_next(class_="re-ribbon-badge left-badge badge_3")
+    def __check_if_has_corram_tag(publication: Tag) -> bool:
+        tag_corram = publication.findChild(class_="re-ribbon-badge left-badge badge_3")
 
         if not tag_corram.__eq__(None):
             return tag_corram.text.upper() == "CORRAM"
+
+    @staticmethod
+    def __get_relevant_informations(publication: Tag):
+        info_publ = publication.findChild(class_="grid_desc_and_btn")
+        rel_info = info_publ.findChild(class_="flowhidden mb10 fontnormal position-relative")
+        rel_info_fire = info_publ.findChild(class_="flowhidden mb10 fontnormal position-relative hoticonfireclass")
+        return rel_info if rel_info is not None else rel_info_fire
 
     def __check_update_controller_informations(self) -> None:
         day_of_intance = self.__instance_time.day
