@@ -78,7 +78,7 @@ class NotificationBoletandoService:
                 publication_text.upper().__contains__("3050") or
                 publication_text.upper().__contains__("3070") or
                 publication_text.upper().__contains__("1650") or
-                publication_text.upper().__contains__("Monitor") or
+                publication_text.upper().__contains__("MONITOR") or
                 has_corram_tag
         ):
             return True
