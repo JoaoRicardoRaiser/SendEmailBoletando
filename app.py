@@ -11,9 +11,9 @@ def run():
     scheduler_time = int(os.getenv("SCHEDULER_TIME"))
 
     while should_check_new_promotions:
-        print(f"Iniciando busca as: {datetime.datetime.utcnow()}")
+        print(f"Iniciando busca as: {datetime.datetime.utcnow().hour - 3}")
         notificationService.check_new_promotions()
-        print(f"Finalizando busca as: {datetime.datetime.utcnow()}")
+        print(f"Finalizando busca as: {datetime.datetime.utcnow().hour - 3}")
         time.sleep(scheduler_time)
 
 
