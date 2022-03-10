@@ -26,7 +26,6 @@ class NotificationBoletandoService:
 
             publication_text = publication_relevant_info.text
             publication_link = publication_relevant_info.a['href']
-            a = 1
 
             has_corram_tag = self.__check_if_has_corram_tag(publication)
 
